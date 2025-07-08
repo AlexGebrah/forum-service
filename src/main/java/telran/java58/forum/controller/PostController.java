@@ -18,7 +18,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    @PostMapping("/{author}")
+    @PostMapping("/post/{author}")
     public PostDto addPost(@PathVariable String author, @RequestBody PostCredentialDto postCredentialDto) {
         postCredentialDto.setAuthor(author);
         return postService.addPost(postCredentialDto);
