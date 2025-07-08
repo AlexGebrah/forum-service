@@ -2,8 +2,6 @@ package telran.java58.forum.model;
 
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
-import telran.java58.forum.dto.CommentDto;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
