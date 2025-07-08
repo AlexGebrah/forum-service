@@ -24,37 +24,37 @@ public class PostController {
         return postService.addPost(postCredentialDto);
     }
 
-    @GetMapping("/posts/{id}")
+    @GetMapping("/forum/post/{id}")
     public PostDto findPostById(@PathVariable String id) {
         return postService.findPostById(id);
     }
 
-    @PatchMapping("/posts/{id}/like")
+    @PatchMapping("/forum/post/{id}/like")
     public void addLike(@PathVariable String id) {
         postService.addLike(id);
     }
 
-    @GetMapping("/posts/author/{author}")
+    @GetMapping("/post/author/{author}")
     public List<PostDto> findPostByAuthor(@PathVariable String author) {
         return postService.findPostByAuthor(author);
     }
 
-    @PatchMapping("/posts/{id}/comment")
+    @PatchMapping("/post/{id}/comment")
     public PostDto addComment(@PathVariable String id, @RequestBody CommentDto comment) {
         return postService.addComment(id, comment);
     }
 
-    @DeleteMapping("/posts/{id}")
+    @DeleteMapping("/post/{id}")
     public PostDto deletePost(@PathVariable String id) {
         return postService.deletePost(id);
     }
 
-    @GetMapping("/posts/tags")
+    @GetMapping("/post/tags")
     public List<PostDto> findPostsByTags(@RequestParam List<String> tags) {
         return postService.findPostsByTags(tags);
     }
 
-    @GetMapping("/posts/period")
+    @GetMapping("/post/period")
     public List<PostDto> findPostsByPeriod(
             @RequestParam("dateFrom") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
             @RequestParam("dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
@@ -65,7 +65,7 @@ public class PostController {
         return postService.findPostsByPeriod(from, to);
     }
 
-    @PatchMapping("/posts/{id}")
+    @PatchMapping("/post/{id}")
     public PostDto updatePost(@PathVariable String id, @RequestBody PostCredentialDto post) {
         return postService.updatePost(id, post);
     }
