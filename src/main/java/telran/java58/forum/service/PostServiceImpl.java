@@ -1,10 +1,13 @@
 package telran.java58.forum.service;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+import telran.java58.forum.dao.PostRepository;
 import telran.java58.forum.dto.CommentDto;
 import telran.java58.forum.dto.PostCredentialDto;
 import telran.java58.forum.dto.PostDto;
+import telran.java58.forum.model.Post;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,49 +15,81 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
+    private final PostRepository postRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public PostDto addPost(PostCredentialDto post) {
-        return null;
+        Post newPost = new Post(post.getTitle(), post.getContent(), post.getAuthor());
+
+        if (post.getTags() != null) {
+            post.getTags().forEach(newPost::addTag);
+        }
+        Post savedPost = postRepository.save(newPost);
+        return modelMapper.map(savedPost, PostDto.class);
     }
 
     @Override
     public PostDto findPostById(String id) {
-        return null;
+        Post post = postRepository.findById(id).orElseThrow();
+        return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public void addLike(String id) {
-
+        Post post = postRepository.findById(id).orElseThrow();
+        post.like();
     }
 
     @Override
     public List<PostDto> findPostByAuthor(String author) {
-        return List.of();
+        return postRepository.findByAuthorIgnoreCase(author).stream()
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .toList();
     }
 
     @Override
     public PostDto addComment(String id, CommentDto comment) {
-        return null;
+        Post post = postRepository.findById(id).orElseThrow();
+        post.addComment(comment);
+        postRepository.save(post);
+        return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public PostDto deletePost(String id) {
-        return null;
+        Post post = postRepository.findById(id).orElseThrow();
+        postRepository.deleteById(id);
+        return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public List<PostDto> findPostsByTags(List<String> tags) {
-        return List.of();
+        return postRepository.findByTagsInIgnoreCase(tags).stream()
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .toList();
     }
 
     @Override
     public List<PostDto> findPostsByPeriod(LocalDateTime dateFrom, LocalDateTime dateTo) {
-        return List.of();
+        return postRepository.findByDateCreatedBetween(dateFrom, dateTo).stream()
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .toList();
     }
 
     @Override
-    public PostDto updatePost(String id, PostCredentialDto post) {
-        return null;
+    public PostDto updatePost(String id, PostCredentialDto postDto) {
+        Post post = postRepository.findById(id).orElseThrow();
+
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+
+        post.getTags().clear();
+        if (postDto.getTags() != null) {
+            postDto.getTags().forEach(post::addTag);
+        }
+
+        Post saved = postRepository.save(post);
+        return modelMapper.map(saved, PostDto.class);
     }
 }

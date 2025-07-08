@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface PostRepository extends MongoRepository<Post, String> {
     List<Post> findByAuthorIgnoreCase(String author);
-    List<Post> findByTagsIn(List<String> tags);
+    List<Post> findByTagsInIgnoreCase(List<String> tags);
     List<Post> findByDateCreatedBetween(LocalDateTime dateFrom, LocalDateTime dateTo);
 }

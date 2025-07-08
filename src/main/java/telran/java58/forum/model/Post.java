@@ -1,9 +1,6 @@
 package telran.java58.forum.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import telran.java58.forum.dto.CommentDto;
 
@@ -36,6 +33,9 @@ public class Post {
         this.author = author;
         this.dateCreated = LocalDateTime.now();
         this.tags.addAll(tags);
+    }
+
+    public Post(String title, String content, String author) {
     }
 
     public void addComment(CommentDto comment) {
