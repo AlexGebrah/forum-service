@@ -24,7 +24,7 @@ public class Post {
     private LocalDateTime dateCreated;
     private final List<String> tags= new ArrayList<>();
     private int likes;
-    private final List<CommentDto> comments = new ArrayList<>();
+    private final List<Comment> comments = new ArrayList<>();
 
     public Post (String title, String content, String author, List<String> tags) {
         this.id = UUID.randomUUID().toString();
@@ -38,7 +38,7 @@ public class Post {
     public Post(String title, String content, String author) {
     }
 
-    public void addComment(CommentDto comment) {
+    public void addComment(Comment comment) {
         comments.add(comment);
     }
 
@@ -46,7 +46,7 @@ public class Post {
         tags.add(tag);
     }
 
-    public  void like() {
+    public void like() {
         likes++;
     }
 

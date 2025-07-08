@@ -7,6 +7,7 @@ import telran.java58.forum.dao.PostRepository;
 import telran.java58.forum.dto.CommentDto;
 import telran.java58.forum.dto.PostCredentialDto;
 import telran.java58.forum.dto.PostDto;
+import telran.java58.forum.model.Comment;
 import telran.java58.forum.model.Post;
 
 import java.time.LocalDateTime;
@@ -49,8 +50,9 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostDto addComment(String id, CommentDto comment) {
+    public PostDto addComment(String id, CommentDto commentDto) {
         Post post = postRepository.findById(id).orElseThrow();
+        Comment comment = modelMapper.map(commentDto, Comment.class);
         post.addComment(comment);
         postRepository.save(post);
         return modelMapper.map(post, PostDto.class);
