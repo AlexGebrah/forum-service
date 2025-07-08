@@ -4,15 +4,19 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import telran.java58.forum.dto.CommentDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Document(collection = "posts")
 public class Post {
     private String id;
     @Setter
@@ -26,8 +30,8 @@ public class Post {
     private int likes;
     private final List<CommentDto> comments = new ArrayList<>();
 
-    public Post (String title, String content, String author) {
-        this.id = //TODO;
+    public Post (String title, String content, String author, List<String> tags) {
+        this.id = UUID.randomUUID().toString();
         this.title = title;
         this.content = content;
         this.author = author;
