@@ -1,6 +1,7 @@
 package telran.java58.forum.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import telran.java58.forum.dao.PostRepository;
@@ -39,7 +40,10 @@ public class PostServiceImpl implements PostService{
     @Override
     public void addLike(String id) {
         Post post = postRepository.findById(id).orElseThrow();
-        post.like();
+        synchronized (post) {
+            post.like();
+            postRepository.save(post);
+        }
     }
 
     @Override
@@ -52,10 +56,12 @@ public class PostServiceImpl implements PostService{
     @Override
     public PostDto addComment(String id, CommentDto commentDto) {
         Post post = postRepository.findById(id).orElseThrow();
-        Comment comment = modelMapper.map(commentDto, Comment.class);
-        post.addComment(comment);
-        postRepository.save(post);
-        return modelMapper.map(post, PostDto.class);
+        synchronized (post) {
+            Comment comment = modelMapper.map(commentDto, Comment.class);
+            post.addComment(comment);
+            Post updated = postRepository.save(post);
+            return modelMapper.map(updated, PostDto.class);
+        }
     }
 
     @Override
