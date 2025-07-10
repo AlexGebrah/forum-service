@@ -7,6 +7,7 @@ import telran.java58.post.dao.PostRepository;
 import telran.java58.post.dto.NewCommentDto;
 import telran.java58.post.dto.NewPostDto;
 import telran.java58.post.dto.PostDto;
+import telran.java58.post.model.Comment;
 import telran.java58.post.model.Post;
 
 import java.time.LocalDate;
@@ -42,27 +43,41 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public PostDto updatePost(String id, NewPostDto newPostDto) {
-        return null;
+        Post post = postRepository.findById(id).orElseThrow();
+        String title = newPostDto.getTitle();
+        //TODO
+
+        return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public PostDto deletePost(String id) {
-        return null;
+        Post post = postRepository.findById(id).orElseThrow();
+        postRepository.delete(post);
+        return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public PostDto addComment(String id, String author, NewCommentDto newCommentDto) {
-        return null;
+        Post post = postRepository.findById(id).orElseThrow();
+        Comment comment = new Comment(author, newCommentDto.getMessage());
+        post.addComment(comment);
+        postRepository.save(post);
+        return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public Iterable<PostDto> findPostsByAuthor(String author) {
-        return null;
+        return postRepository.findByAuthorIgnoreCase(author)
+                .map(p -> modelMapper.map(p, PostDto.class))
+                .toList();
     }
 
     @Override
     public Iterable<PostDto> findPostsByTags(List<String> tags) {
-        return null;
+        return postRepository.findPostsByTagsInIgnoreCase(tags)
+                .map(p -> modelMapper.map(p, PostDto.class))
+                .toList();
     }
 
     @Override
