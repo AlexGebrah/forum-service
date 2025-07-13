@@ -2,7 +2,7 @@ package telran.java58.accounting.dto;
 
 import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @AllArgsConstructor
@@ -11,5 +11,5 @@ import java.util.List;
 public class NewRolesDto {
 private String login;
 @Singular
-private List<String> roles;
+private Set<String> roles;
 }
