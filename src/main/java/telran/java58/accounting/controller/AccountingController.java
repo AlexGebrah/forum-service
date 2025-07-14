@@ -8,6 +8,8 @@ import telran.java58.accounting.dto.UserDto;
 import telran.java58.accounting.dto.UserUpdateDto;
 import telran.java58.accounting.service.AccountingService;
 
+import java.security.Principal;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/account")
@@ -20,8 +22,8 @@ private final AccountingService accountingService;
     }
 
     @GetMapping("/login")
-    public UserDto login(String login) {
-        return accountingService.login(login);
+    public UserDto login(Principal principal) {
+        return accountingService.login(principal.getName());
     }
 
     @DeleteMapping("/user/{login}")
@@ -45,8 +47,8 @@ private final AccountingService accountingService;
     }
 
     @PatchMapping("/password")
-    public void changePassword(String password) {
-        accountingService.changePassword(password);
+    public void changePassword(Principal principal, @RequestHeader("X-password") String newPassword) {
+        accountingService.changePassword(principal.getName(), newPassword);
     }
 
     @GetMapping("/user/{login}")

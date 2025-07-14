@@ -3,18 +3,18 @@ package telran.java58.accounting.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import telran.java58.accounting.dao.AccountingRepository;
+import telran.java58.accounting.dao.UserAccountingRepository;
 import telran.java58.accounting.dto.NewRolesDto;
 import telran.java58.accounting.dto.UserCreationDto;
 import telran.java58.accounting.dto.UserDto;
 import telran.java58.accounting.dto.UserUpdateDto;
 import telran.java58.accounting.dto.exceptions.UserAlreadyExistsException;
-import telran.java58.accounting.model.User;
+import telran.java58.accounting.model.UserAccount;
 
 @Service
 @RequiredArgsConstructor
-public class AccountingServiseImpl implements AccountingService{
-    private  final AccountingRepository accountingRepository;
+public class UserAccountingServiseImpl implements AccountingService{
+    private  final UserAccountingRepository accountingRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -23,21 +23,16 @@ public class AccountingServiseImpl implements AccountingService{
             throw new UserAlreadyExistsException(userCreationDto.getLogin());
         }
 
-        User user = new User(
-                userCreationDto.getLogin(),
-                userCreationDto.getFirstName(),
-                userCreationDto.getPassword(),
-                userCreationDto.getLastName()
-        );
-
-        accountingRepository.save(user);
-
-        return modelMapper.map(user, UserDto.class);
+        UserAccount userAccount = modelMapper.map(userCreationDto, UserAccount.class);
+        userAccount.addRole("USER");
+        accountingRepository.save(userAccount);
+        return modelMapper.map(userAccount, UserDto.class);
     }
 
     @Override
     public UserDto login(String login) {
-        return null;
+        UserAccount userAccount = accountingRepository.findById(login).orElseThrow();
+        return modelMapper.map(userAccount, UserDto.class);
     }
 
     @Override
@@ -61,7 +56,7 @@ public class AccountingServiseImpl implements AccountingService{
     }
 
     @Override
-    public void changePassword(String password) {
+    public void changePassword(String password, String newPassword) {
 
     }
 

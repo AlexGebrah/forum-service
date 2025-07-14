@@ -18,7 +18,7 @@ public interface AccountingService {
 
     NewRolesDto deleteRole (String login, String role);
 
-    void changePassword (String password);
+    void changePassword (String password, String newPassword);
 
     UserDto getUser (String login);
 }
