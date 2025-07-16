@@ -53,10 +53,7 @@ public class PostAuthorizationFilter implements Filter {
 
             UserAccount user = userRepository.findById(login).orElseThrow();
 
-            boolean isAdmin = user.getRoles().contains(Role.ADMINISTRATOR);
-            boolean isAuthor = post.getAuthor().equalsIgnoreCase(login);
-
-            if (!isAdmin && !isAuthor) {
+            if (!user.getRoles().contains(Role.ADMINISTRATOR) && !post.getAuthor().equalsIgnoreCase(login)) {
                 httpRes.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
