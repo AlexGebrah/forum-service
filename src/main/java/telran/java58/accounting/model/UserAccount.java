@@ -9,8 +9,9 @@ import java.util.Set;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor@EqualsAndHashCode(of = {"login"})
+@NoArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"login"})
 @Document(collection = "users")
 public class UserAccount {
     @Id
@@ -24,18 +25,11 @@ public class UserAccount {
     @Singular
     private Set<Role> roles = new HashSet<>();
 
-    public UserAccount(String login, String password, String firstName, String lastName) {
-        this.login = login;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    public  boolean addRole(String role) {
+    public boolean addRole(String role) {
         return roles.add(Role.valueOf(role.toUpperCase()));
     }
 
-    public  boolean removeRole(String role) {
+    public boolean removeRole(String role) {
         return roles.remove(Role.valueOf(role.toUpperCase()));
     }
 }

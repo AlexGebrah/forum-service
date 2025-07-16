@@ -3,6 +3,7 @@ package telran.java58.accounting.service;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import telran.java58.accounting.dao.UserAccountingRepository;
 import telran.java58.accounting.dto.NewRolesDto;
@@ -14,7 +15,7 @@ import telran.java58.accounting.model.UserAccount;
 
 @Service
 @RequiredArgsConstructor
-public class UserAccountingServiseImpl implements AccountingService{
+public class UserAccountingServiseImpl implements AccountingService, CommandLineRunner {
     private  final UserAccountingRepository userAccountingRepository;
     private final ModelMapper modelMapper;
 
@@ -85,5 +86,14 @@ public class UserAccountingServiseImpl implements AccountingService{
     public UserDto getUser(String login) {
         UserAccount userAccount = userAccountingRepository.findById(login).orElseThrow();
         return modelMapper.map(userAccount, UserDto.class);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        if(!userAccountingRepository.existsById("admin")) {
+            UserAccount admin = new UserAccount.builder()
+                    .login("admin")
+                    .password(BCrypt.checkpw())
+        }
     }
 }
